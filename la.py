@@ -9,16 +9,6 @@ drugvarlist = ['lidocaine1','lidocaine2plain','lidocaine2epi','bupi25','bupi5','
 concentrationlist = [10,20,20,2.5,5,5]
 drugtoxlist = [4.5,4.5,7.0,2.5,2.5,3.0]
 
-def text_field(label, columns=None, **input_params):
-    c1, c2 = st.columns(2)
-
-    c1.markdown('##')
-    c1.markdown(label)
-
-    input_params.setdefault("key",label)
-
-    return c2.number_input("", value=0, **input_params)
-
 def toxic_field(label, columns=None, **input_params):
     c1, c2 = st.columns(2)
 
@@ -36,11 +26,10 @@ with st.expander('Toxic doses'):
     for i,j,k in zip(druglist,drugvarlist,drugtoxlist):
         globals()[j+'tox'] = toxic_field(i,value=k)
 
-st.subheader('Doses given')
-
+st.subheader('Doses given (ml)')
 # enter dose given fields
 for i,j in zip(drugvarlist,druglist):
-    globals()[i] = text_field(j)
+    globals()[i] = st.number_input(j, value=0)
 
 givenlist = []
 for i in drugvarlist:
@@ -54,6 +43,7 @@ for i in drugvarlist:
     drugmaxlist.append(m)
 
 #create table
+st.subheader('You can give:')
 df = pd.DataFrame(columns=['Drug','Dose given (ml)','Dose remaining (ml)','Fraction of total given','Max dose (mg)'])
 df['Drug'] = druglist
 df['Dose given (ml)'] = givenlist
